@@ -1,6 +1,7 @@
 const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits, AttachmentBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
 const client = new Client({
     intents: [
@@ -302,11 +303,11 @@ client.on('interactionCreate', async interaction => {
                     if (citizenRole) citizenRoleId = citizenRole.id;
                 }
 
-                const channel = await client.channels.fetch(RECRUIT_ANNOUNCE_CHANNEL_ID);
+                const channel = await client.channels.fetch(ANNOUNCE_CHANNEL_ID);
 
                 const embed = new EmbedBuilder()
                     .setTitle('📋 Recrutement Harmony Custom')
-                    .setDescription('**Harmony Custom recrute !**\n\nNous recherchons des personnes motivées pour rejoindre notre équipe.\n\n📝 **Les CV se font ici:** <#1210594716802883604>\n\nCliquez sur le bouton dans l\'annonce principale pour postuler et remplir votre candidature.')
+                    .setDescription('**Harmony Custom recrute !**\n\nNous recherchons des personnes motivées pour rejoindre notre équipe.\n\n📝 **Les CV se font ici:** <#1273007405948735685>\n\nCliquez sur le bouton dans l\'annonce principale pour postuler et remplir votre candidature.')
                     .setColor('#00FF00')
                     .setTimestamp();
 
