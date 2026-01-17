@@ -1,0 +1,278 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  🎵 HARMONY BOT - CONFIGURATION COMPLÈTE                      ║
+║                            Setup Terminé ✅                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+📌 INFORMATIONS PRINCIPALES
+═══════════════════════════════════════════════════════════════════════════════
+
+Entreprise       : Harmony Custom
+Type            : Customisation de véhicules
+Discord Server  : 1273007405046693888
+Repository      : https://github.com/maxxxxx2603/harmony
+Branch          : main
+Status          : ✅ PRÊT À L'EMPLOI
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🚀 DÉMARRAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+1️⃣  Ouvrir le terminal dans le dossier
+2️⃣  Installer: npm install
+3️⃣  Lancer: npm start
+4️⃣  Le bot se connecte automatiquement
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🔑 TOKEN DISCORD
+═══════════════════════════════════════════════════════════════════════════════
+
+Token : [Stocké dans .env - fichier sécurisé]
+
+✅ Le token est stocké dans .env (fichier sécurisé, non commité sur GitHub)
+⚠️ Voir le fichier .env dans votre dossier local
+
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 TOUS LES CHANNELS - COPIER/COLLER RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+RECRUTEMENT:
+  #recrutement           1273007405948735685
+  #cv-review             1461484567587455222
+  #id-archive            1453169059825717442
+
+INFORMATIONS:
+  #disponibilités        1461484851680121034
+  #info                  1429580538569822341
+  #reglement             1362546408271384698
+  #remuneration          1387554231724146709
+
+TICKETS:
+  #ticket-announce       1452476736775258283
+  Catégorie Commandes    1461485731565277347
+  Catégorie Contrats     1461485777232859146
+
+VENTES:
+  #ventes-kits           1461485195877421118
+
+EMPLOYÉS:
+  Catégorie Employés     1362049732213473360
+
+
+═══════════════════════════════════════════════════════════════════════════════
+👥 TOUS LES RÔLES - COPIER/COLLER RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+GRADES EMPLOYÉS:
+  [ER] Recrue    1362086726184472626  (15% paye)
+  [E]  Employé   1210594669789052991  (20% paye)
+  [EE] Expert    1286055333613011026  (25% paye)
+
+RÔLES SPÉCIAUX:
+  Citoyen        1273007405046693889
+  Direction      1461486337898053665
+  Staff          1210594673618460733
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🔤 PRÉFIXES & CODES
+═══════════════════════════════════════════════════════════════════════════════
+
+PRÉFIXES:
+  [ER] = Employé Recrue         (15% paye)
+  [E]  = Employé                 (20% paye)
+  [EE] = Employé Expert          (25% paye)
+
+EMOJIS CANAUX:
+  🔴 = Quota EN COURS (< 40 customs)
+  🟢 = QUOTA ATTEINT (≥ 40 customs)
+
+FORMAT CANAUX:
+  🔴-er-[nom]    Recrue en cours
+  🔴-e-[nom]     Employé en cours
+  🔴-ee-[nom]    Expert en cours
+  🟢-ee-[nom]    Expert quota atteint
+
+
+═══════════════════════════════════════════════════════════════════════════════
+⚡ TOUTES LES COMMANDES SLASH
+═══════════════════════════════════════════════════════════════════════════════
+
+POUR LES EMPLOYÉS (dans leur channel privé):
+  /custom               ← Enregistrer une customisation
+  /kit                  ← Déclarer une vente de kit
+
+POUR LES ADMINS (serveur entier):
+  /rc                   ← Publier annonce recrutement
+  /add @user            ← Ajouter employé
+  /up @user             ← Promouvoir employé
+  /virer @user          ← Licencier employé
+  /total-kit            ← Stats kits par employé
+  /facture              ← Récapitulatif factures
+  /payes                ← Calcul paies (min 20 customs)
+  /reset                ← RÉINITIALISER DONNÉES
+  /remuneration         ← Publier rémunération
+  /reglement            ← Publier règlement
+  /info                 ← Guide complet
+  /setdata              ← Initialiser données test
+
+
+═══════════════════════════════════════════════════════════════════════════════
+💰 SYSTÈME DE RÉMUNÉRATION
+═══════════════════════════════════════════════════════════════════════════════
+
+QUOTAS:
+  Objectif       : 40 customisations
+  Minimum        : 20 customisations (sinon 0$ de paye)
+  
+PAIES PAR GRADE:
+  [ER]           : 15% de la facture
+  [E]            : 20% de la facture
+  [EE]           : 25% de la facture
+
+PRIMES KITS:
+  20 kits → +100.000$
+  40 kits → +200.000$
+  60 kits → +300.000$
+  (Cumule : chaque palier de 20)
+
+TYPES CUSTOMISATIONS:
+  🛍️ Boutique    (Plaques: 4 chiffres / 4 lettres)   × 2
+  📦 Import      (Plaques: 2 chiffres / 3 lettres)   × 2.5
+  🎮 GTA Online  (Plaques: 2 chiffres / 3 lettres)   × 10
+
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 DONNÉES PERSISTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+Sauvegarde automatique TOUTES LES 10 MINUTES
+
+Fichiers:
+  data/payroll.json    ← Données paies et kits
+  data/customs.json    ← Données customisations et quotas
+
+Pas de base de données externe requise - tout est stocké localement
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🔄 WORKFLOWS ESSENTIELS
+═══════════════════════════════════════════════════════════════════════════════
+
+RECRUTEMENT:
+  1. Admin: /rc
+  2. Candidat clique "Postuler"
+  3. Channel privé créé
+  4. 9 questions automatiques
+  5. CV envoyé à #cv-review
+  6. Direction: Accepter/Refuser
+  7. Si accepté: Rôle [ER] + channel privé
+
+TRAVAIL EMPLOYÉ:
+  1. /custom → Type → Montant → Screenshot
+  2. /kit → Nombre → Screenshot facture
+  3. Données enregistrées automatiquement
+  4. Quota mis à jour en temps réel
+  5. Emoji change 🔴→🟢 si quota ≥40
+
+PROMOTION:
+  1. Admin: /up @utilisateur
+  2. Rôle changé automatiquement
+  3. Pseudo renommé [ER]→[E]→[EE]
+  4. Channel renommé et repositionné
+
+LICENCIEMENT:
+  1. Admin: /virer @utilisateur
+  2. Channel supprimé
+  3. Rôles retirés
+  4. Reste citoyen seulement
+
+PAYE:
+  1. Admin: /payes
+  2. Calcul automatique par grade
+  3. Minimum 20 customs requis
+  4. Prime kits incluse
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🛠️ FICHIERS & STRUCTURE
+═══════════════════════════════════════════════════════════════════════════════
+
+Harmony Bot Nouv/
+├── src/
+│   └── bot.js                    ← Code principal (2053 lignes)
+├── data/
+│   ├── payroll.json              ← Données paies
+│   └── customs.json              ← Données customisations
+├── .env                          ← ⚠️ Token (SÉCURISÉ)
+├── .env.example                  ← Exemple config
+├── .gitignore                    ← Fichiers ignorés
+├── package.json                  ← Dépendances Node.js
+├── README.md                     ← Doc principale
+├── HARMONY_CONFIG.md             ← Configuration détaillée
+├── HARMONY_GUIDE.md              ← Guide complet
+├── DATA_PERSISTENCE.md           ← Info persistance
+└── railway.toml                  ← Config Railway (optionnel)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+📦 DÉPENDANCES
+═══════════════════════════════════════════════════════════════════════════════
+
+discord.js     : ^14.14.1    ← Framework Discord
+Node.js        : 16+        ← Runtime JavaScript
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🔗 GIT & GITHUB
+═══════════════════════════════════════════════════════════════════════════════
+
+Repository URL    : https://github.com/maxxxxx2603/harmony.git
+Branch            : main
+Commits           : 3 commits initiaux
+Status            : ✅ Pushé et en ligne
+
+Commandes git:
+  git clone https://github.com/maxxxxx2603/harmony.git
+  cd harmony
+  npm install
+  npm start
+
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ CHECKLIST FINAL
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Code complètement adapté de Benny's → Harmony
+✓ Token Discord configuré dans .env
+✓ .env sécurisé (non commité sur GitHub)
+✓ Tous les channels et rôles configurés
+✓ Tous les préfixes et emojis en place
+✓ Commandes slash enregistrées
+✓ Persistance données configurée
+✓ Repository GitHub initialisé
+✓ Commits pushés vers https://github.com/maxxxxx2603/harmony
+✓ Documentation complète rédigée
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🚀 PRÊT À DÉMARRER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. npm install
+2. npm start
+
+Le bot se connectera automatiquement et les commandes seront disponibles!
+
+Toute question? Consultez:
+  - HARMONY_GUIDE.md    (Guide complet)
+  - HARMONY_CONFIG.md   (Configuration détaillée)
+  - README.md           (Documentation rapide)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                          🎵 HARMONY CUSTOM ©  2026
+═══════════════════════════════════════════════════════════════════════════════
