@@ -1,6 +1,6 @@
 # 🎵 Harmony Custom - Bot de Gestion Discord
 
-Bot Discord complet pour la gestion d'une entreprise de customisation de véhicules chez Harmony Custom.
+Bot Discord complet pour la gestion d'une entreprise de customisation de véhicules.
 
 ## 🎯 Fonctionnalités Principales
 

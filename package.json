@@ -1,7 +1,7 @@
 {
   "name": "harmony-bot",
   "version": "1.0.0",
-  "description": "Bot Discord pour le système de recrutement Benny's",
+  "description": "Bot Discord de gestion d'entreprise",
   "main": "src/bot.js",
   "scripts": {
     "start": "node src/bot.js"
