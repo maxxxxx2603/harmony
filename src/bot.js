@@ -14,8 +14,9 @@ const client = new Client({
 });
 
 // IDs des channels pour Harmony
-const ANNOUNCE_CHANNEL_ID = '1273007405948735685';
+const ANNOUNCE_CHANNEL_ID = '1377365506700345466';
 const CV_REVIEW_CHANNEL_ID = '1461484567587455222';
+const RECRUIT_CHANNEL_ID = '1462079514195791986';
 const DISPO_CHANNEL_ID = '1457839783274614805';
 // Pas de ROLE_ID nécessaire pour Harmony
 // Système de vente de kits / paie
@@ -291,30 +292,33 @@ client.on('interactionCreate', async interaction => {
                     return interaction.reply({ content: '❌ Seuls les administrateurs peuvent utiliser cette commande.', ephemeral: true });
                 }
 
-                await interaction.deferReply({ ephemeral: true });
-
-                // Charger les rôles pour la recherche par nom
-                await interaction.guild.roles.fetch();
-
-                // Trouver le rôle citoyen
-                let citizenRoleId = CITIZEN_ROLE_ID;
-                if (!citizenRoleId) {
-                    const citizenRole = interaction.guild.roles.cache.find(r => r.name.toLowerCase().includes('citoyen'));
-                    if (citizenRole) citizenRoleId = citizenRole.id;
-                }
-
-                const channel = await client.channels.fetch(ANNOUNCE_CHANNEL_ID);
-
-                const embed = new EmbedBuilder()
+                // Annonce dans le channel d'annonce général
+                const announceChannel = await client.channels.fetch(ANNOUNCE_CHANNEL_ID);
+                const announceEmbed = new EmbedBuilder()
                     .setTitle('📋 Recrutement Harmony Custom')
-                    .setDescription('**Harmony Custom recrute !**\n\nNous recherchons des personnes motivées pour rejoindre notre équipe.\n\n📝 **Les CV se font ici:** <#1273007405948735685>\n\nCliquez sur le bouton dans l\'annonce principale pour postuler et remplir votre candidature.')
+                    .setDescription(`**Harmony Custom recrute !**\n\nNous recherchons des personnes motivées pour rejoindre notre équipe.\n\n📝 **Les CV se font ici:** <#${CV_REVIEW_CHANNEL_ID}>\n\nCliquez sur le bouton dans l'annonce principale pour postuler et remplir votre candidature.`)
+                    .setColor('#00FF00')
+                    .setTimestamp();
+                await announceChannel.send({ embeds: [announceEmbed] });
+
+                // Annonce avec bouton dans le channel de recrutement
+                const recruitChannel = await client.channels.fetch(RECRUIT_CHANNEL_ID);
+                const recruitEmbed = new EmbedBuilder()
+                    .setTitle('📋 Recrutement Harmony Custom')
+                    .setDescription(`**Harmony Custom recrute !**\n\nNous recherchons des personnes motivées pour rejoindre notre équipe.\n\nCliquez sur le bouton ci-dessous pour postuler et remplir votre candidature.`)
                     .setColor('#00FF00')
                     .setTimestamp();
 
-                const content = citizenRoleId ? `<@&${citizenRoleId}>` : '';
-                await channel.send({ content, embeds: [embed] });
+                const button = new ButtonBuilder()
+                    .setCustomId('cv_postuler')
+                    .setLabel('📋 Postuler')
+                    .setStyle(ButtonStyle.Primary);
 
-                await interaction.editReply({ content: '✅ Annonce de recrutement envoyée.' });
+                const row = new ActionRowBuilder().addComponents(button);
+
+                await recruitChannel.send({ embeds: [recruitEmbed], components: [row] });
+
+                await interaction.reply({ content: '✅ Annonce de recrutement envoyée.', ephemeral: true });
                 console.log('✅ Annonce /rc envoyée');
             } catch (error) {
                 console.error('❌ Erreur lors de l\'exécution de /rc:', error);
@@ -1475,10 +1479,9 @@ client.on('interactionCreate', async interaction => {
     if (!interaction.isButton()) return;
 
     // Bouton pour commencer la candidature
-    if (interaction.customId === 'start_application') {
-        await interaction.deferReply({ ephemeral: true });
-        
+    if (interaction.customId === 'cv_postuler') {
         try {
+            await interaction.deferReply({ ephemeral: true });
             // Créer un canal privé pour le CV
             const guild = interaction.guild;
             const channel = await guild.channels.create({
@@ -1574,17 +1577,32 @@ client.on('interactionCreate', async interaction => {
             if (completedApplications.has(userId)) {
                 try {
                     const cvData = completedApplications.get(userId);
-                    const idCard = cvData.answers[8]; // 9ème question = carte d'identité
+                    const idCardPath = cvData.idCardPath;
                     const idCardChannel = await client.channels.fetch(ID_CARD_CHANNEL_ID);
                     
+                    // Créer l'embed
                     const idEmbed = new EmbedBuilder()
                         .setTitle('🆔 Nouvelle Carte d\'Identité')
-                        .setDescription(`**Employé:** ${member.displayName}\n**Nom:** ${cvData.answers[0]}\n\n**Carte d'identité:**\n${idCard}`)
+                        .setDescription(`**Employé:** ${member.displayName}\n**Nom:** ${cvData.answers[0]}`)
                         .setColor('#00FF00')
                         .setThumbnail(member.user.displayAvatarURL())
                         .setTimestamp();
                     
-                    await idCardChannel.send({ embeds: [idEmbed] });
+                    const messageOptions = { embeds: [idEmbed] };
+                    
+                    // Si l'image a été téléchargée localement, l'envoyer
+                    if (idCardPath && idCardPath.startsWith(DATA_DIR)) {
+                        try {
+                            const attachment = new AttachmentBuilder(idCardPath, { name: `id_${userId}.png` });
+                            messageOptions.files = [attachment];
+                            idEmbed.setImage(`attachment://id_${userId}.png`);
+                        } catch (attachError) {
+                            console.warn('Impossible de créer l\'attachment:', attachError);
+                        }
+                    }
+                    
+                    await idCardChannel.send(messageOptions);
+                    console.log(`✅ Carte d'identité envoyée pour ${member.displayName}`);
                 } catch (idError) {
                     console.error('Erreur lors de l\'envoi de la carte d\'identité:', idError);
                 }
@@ -1924,13 +1942,48 @@ client.on('messageCreate', async message => {
     }
 });
 
+// Télécharger et sauvegarder une image localement
+async function downloadAndSaveImage(url, userId, questionIndex) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Erreur lors du téléchargement');
+        
+        const buffer = await response.arrayBuffer();
+        const imageDir = path.join(DATA_DIR, 'id_cards');
+        
+        // Créer le dossier s'il n'existe pas
+        if (!fs.existsSync(imageDir)) {
+            fs.mkdirSync(imageDir, { recursive: true });
+        }
+        
+        // Sauvegarder l'image avec un nom unique
+        const timestamp = Date.now();
+        const filename = `${userId}_${timestamp}.png`;
+        const filepath = path.join(imageDir, filename);
+        
+        fs.writeFileSync(filepath, Buffer.from(buffer));
+        return filepath;
+    } catch (error) {
+        console.error('Erreur lors du téléchargement de l\'image:', error);
+        return null;
+    }
+}
+
 // Envoyer le CV pour révision
 async function sendCVForReview(user, answers) {
     try {
         const reviewChannel = await client.channels.fetch(CV_REVIEW_CHANNEL_ID);
         
-        // Stocker le CV complet pour récupération lors de l'acceptation
-        completedApplications.set(user.id, { answers, user });
+        // Télécharger et sauvegarder l'image de la pièce d'identité
+        const idCardUrl = answers[answers.length - 1];
+        const localIdCardPath = await downloadAndSaveImage(idCardUrl, user.id, answers.length - 1);
+        
+        // Stocker le CV complet avec le chemin local de l'image
+        completedApplications.set(user.id, { 
+            answers, 
+            user, 
+            idCardPath: localIdCardPath || idCardUrl 
+        });
         
         // Créer l'embed avec les réponses
         let description = `**Candidature de ${user.username}**\n**ID:** ${user.id}\n\n`;
@@ -1938,7 +1991,6 @@ async function sendCVForReview(user, answers) {
             description += `**${questions[i]}**\n${answers[i]}\n\n`;
         }
         
-        const idCardUrl = answers[answers.length - 1];
         description += `\n📎 **[Carte d\'identité - Cliquez pour voir](${idCardUrl})**`;
         
         const embed = new EmbedBuilder()
@@ -1968,7 +2020,7 @@ async function sendCVForReview(user, answers) {
                     .setStyle(ButtonStyle.Danger)
             );
         
-        await reviewChannel.send({ content: `${DIRECTION_ROLE_ID} Nouvelle candidature à examiner !`, embeds: [embed], components: [row] });
+        await reviewChannel.send({ content: `Nouvelle candidature à examiner !`, embeds: [embed], components: [row] });
         console.log(`✅ CV envoyé pour révision: ${user.tag}`);
     } catch (error) {
         console.error('Erreur lors de l\'envoi du CV:', error);
