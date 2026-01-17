@@ -13,9 +13,9 @@ const client = new Client({
 });
 
 // IDs des channels pour Harmony
-const ANNOUNCE_CHANNEL_ID = '1377365506700345466';
+const ANNOUNCE_CHANNEL_ID = '1273007405948735685';
 const CV_REVIEW_CHANNEL_ID = '1461484567587455222';
-const DISPO_CHANNEL_ID = '1461484851680121034';
+const DISPO_CHANNEL_ID = '1457839783274614805';
 // Pas de ROLE_ID nécessaire pour Harmony
 // Système de vente de kits / paie
 const SALES_CHANNEL_ID = '1461485195877421118';
@@ -25,7 +25,7 @@ const PAYROLL_FILE = path.join(DATA_DIR, 'payroll.json');
 const CUSTOMS_FILE = path.join(DATA_DIR, 'customs.json');
 const CUSTOMS_CHANNEL_ID = 'all'; // Tous les channels pour customisations
 // Annonce recrutement via /rc
-const RECRUIT_ANNOUNCE_CHANNEL_ID = '1273007405948735685';
+const RECRUIT_ANNOUNCE_CHANNEL_ID = '1461484567587455222';
 const GUILD_ID = '1273007405046693888';
 // Rôles
 const CITIZEN_ROLE_ID = '1273007405046693889';
@@ -33,8 +33,8 @@ const CITIZEN_ROLE_ID = '1273007405046693889';
 const ID_CARD_CHANNEL_ID = '1453169059825717442';
 const DIRECTION_ROLE_ID = '1461486337898053665';
 const COMMANDE_CATEGORY_ID = '1461485731565277347';
-const CONTRAT_CATEGORY_ID = '1461485777232859146';
-const TICKET_ANNOUNCE_CHANNEL_ID = '1452476736775258283'; // Channel pour l'annonce des tickets
+const CONTRAT_CATEGORY_ID = '1389902369063702600';
+const TICKET_ANNOUNCE_CHANNEL_ID = '1377365506700345466'; // Channel pour l'annonce des tickets
 
 // Stockage temporaire des CVs en cours
 const activeApplications = new Map();
@@ -328,7 +328,7 @@ client.on('interactionCreate', async interaction => {
         if (interaction.commandName === 'kit') {
             try {
                 // Vérifier que la commande est utilisée dans la catégorie employés
-                const EMPLOYEE_CATEGORY_ID = '1362049732213473360';
+                const EMPLOYEE_CATEGORY_ID = '1424376634554716322';
                 if (interaction.channel.parentId !== EMPLOYEE_CATEGORY_ID) {
                     return interaction.reply({ content: '❌ Cette commande ne peut être utilisée que dans votre channel privé d\'employé.', ephemeral: true });
                 }
@@ -461,7 +461,7 @@ client.on('interactionCreate', async interaction => {
                 const targetMember = await interaction.guild.members.fetch(targetUser.id);
 
                 // Ajouter les rôles employé
-                const role1 = await interaction.guild.roles.fetch('1362086726184472626');
+                const role1 = await interaction.guild.roles.fetch('1288186552249225380');
                 const role2 = await interaction.guild.roles.fetch('1363091238923931658');
                 const roleToRemove = await interaction.guild.roles.fetch('1458961638316179648');
 
@@ -484,7 +484,7 @@ client.on('interactionCreate', async interaction => {
                 const employeeChannel = await interaction.guild.channels.create({
                     name: channelName,
                     type: ChannelType.GuildText,
-                    parent: '1362049732213473360',
+                    parent: '1424376634554716322',
                     permissionOverwrites: [
                         {
                             id: interaction.guild.id,
@@ -556,15 +556,15 @@ client.on('interactionCreate', async interaction => {
                 const targetUser = interaction.options.getUser('employe');
                 const targetMember = await interaction.guild.members.fetch(targetUser.id);
 
-                // Vérifier si l'employé a déjà le rôle E (1210594669789052991)
-                const hasRoleE = targetMember.roles.cache.has('1210594669789052991');
+                // Vérifier si l'employé a déjà le rôle E (1351702387198394429)
+                const hasRoleE = targetMember.roles.cache.has('1351702387198394429');
 
                 let newNickname, newChannelName, gradeText;
 
                 if (hasRoleE) {
                     // Promotion E → EE
-                    const roleToRemove = await interaction.guild.roles.fetch('1210594669789052991');
-                    const roleToAdd = await interaction.guild.roles.fetch('1286055333613011026');
+                    const roleToRemove = await interaction.guild.roles.fetch('1351702387198394429');
+                    const roleToAdd = await interaction.guild.roles.fetch('1288186576513269843');
                     
                     if (roleToRemove) await targetMember.roles.remove(roleToRemove);
                     if (roleToAdd) await targetMember.roles.add(roleToAdd);
@@ -579,8 +579,8 @@ client.on('interactionCreate', async interaction => {
                     newChannelName = '-ee-';
                 } else {
                     // Promotion ER → E
-                    const roleToRemove = await interaction.guild.roles.fetch('1362086726184472626');
-                    const roleToAdd = await interaction.guild.roles.fetch('1210594669789052991');
+                    const roleToRemove = await interaction.guild.roles.fetch('1288186552249225380');
+                    const roleToAdd = await interaction.guild.roles.fetch('1351702387198394429');
                     
                     if (roleToRemove) await targetMember.roles.remove(roleToRemove);
                     if (roleToAdd) await targetMember.roles.add(roleToAdd);
@@ -746,7 +746,7 @@ client.on('interactionCreate', async interaction => {
         if (interaction.commandName === 'custom') {
             try {
                 // Vérifier que la commande est utilisée dans la catégorie employés
-                const EMPLOYEE_CATEGORY_ID = '1362049732213473360';
+                const EMPLOYEE_CATEGORY_ID = '1424376634554716322';
                 if (interaction.channel.parentId !== EMPLOYEE_CATEGORY_ID) {
                     return interaction.reply({ content: '❌ Cette commande ne peut être utilisée que dans votre channel privé d\'employé.', ephemeral: true });
                 }
@@ -812,7 +812,7 @@ client.on('interactionCreate', async interaction => {
 
                 await interaction.deferReply({ ephemeral: true });
 
-                const REGLEMENT_CHANNEL_ID = '1387554231724146709';
+                const REGLEMENT_CHANNEL_ID = '1273007405541884032';
                 const reglementChannel = await client.channels.fetch(REGLEMENT_CHANNEL_ID);
 
                 // Embed principal
@@ -900,7 +900,7 @@ client.on('interactionCreate', async interaction => {
 
                 await interaction.deferReply({ ephemeral: true });
 
-                const INFO_CHANNEL_ID = '1429580538569822341';
+                const INFO_CHANNEL_ID = '1413842011060047943';
                 const infoChannel = await client.channels.fetch(INFO_CHANNEL_ID);
 
                 // Créer l'embed principal
@@ -1195,9 +1195,9 @@ client.on('interactionCreate', async interaction => {
                 const fmt = new Intl.NumberFormat('fr-FR');
 
                 // Rôles et pourcentages
-                const ROLE_ER = '1362086726184472626'; // 15%
-                const ROLE_E = '1210594669789052991';  // 20%
-                const ROLE_EE = '1286055333613011026'; // 25%
+                const ROLE_ER = '1288186552249225380'; // 15%
+                const ROLE_E = '1351702387198394429';  // 20%
+                const ROLE_EE = '1288186576513269843'; // 25%
 
                 // Calculer les payes pour chaque employé
                 const embed = new EmbedBuilder()
@@ -1335,7 +1335,7 @@ client.on('interactionCreate', async interaction => {
                 saveCustoms(emptyCustoms);
 
                 // Remettre tous les channels employés avec 🔴
-                const EMPLOYEE_CATEGORY_ID = '1362049732213473360';
+                const EMPLOYEE_CATEGORY_ID = '1424376634554716322';
                 let channelsUpdated = 0;
                 
                 try {
