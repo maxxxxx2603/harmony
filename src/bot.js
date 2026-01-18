@@ -253,7 +253,7 @@ async function registerCommands() {
                 options: [
                     {
                         name: 'employe',
-                        description: 'L''employé à qui ajouter des customs',
+                        description: 'L\'employé à qui ajouter des customs',
                         type: 6, // User
                         required: true
                     },
