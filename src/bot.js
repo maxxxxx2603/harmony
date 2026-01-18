@@ -825,7 +825,7 @@ client.on('interactionCreate', async interaction => {
                     .addFields(
                         {
                             name: '🎯 Quota de Customisations',
-                            value: '• **Le quota est de 40 customisations**\n• **Minimum requis :** 20 customisations pour être payé\n• **⚠️ Important :** Moins de 20 customs = **Aucune rémunération**\n• **Indicateur :** 🔴 (en cours) / 🟢 (quota atteint)',
+                            value: '• **Le quota est de 20 customisations**\n• **Minimum requis :** 20 customisations pour être payé\n• **⚠️ Important :** Moins de 20 customs = **Aucune rémunération**\n• **Indicateur :** 🔴 (en cours) / 🟢 (quota atteint)',
                             inline: false
                         },
                         {
@@ -835,7 +835,7 @@ client.on('interactionCreate', async interaction => {
                         },
                         {
                             name: '💵 Pourcentages par Grade',
-                            value: '• **[AMT]** Apprenti Mécanicien Tunning : **15%** des factures\n• **[M]** Mécanicien : **20%** des factures\n• **[ME]** Mécanicien Expert : **25%** des factures',
+                            value: '• **[AMT]** Apprenti Mécano Test : **15%** des factures\n• **[M]** Mécanicien : **20%** des factures\n• **[ME]** Mécanicien Expert : **25%** des factures',
                             inline: false
                         },
                         {
@@ -913,7 +913,7 @@ client.on('interactionCreate', async interaction => {
                     .addFields(
                         {
                             name: '🛠️ /custom - Enregistrer une customisation',
-                            value: '**Utilisation :**\n1️⃣ Tapez `/custom`\n2️⃣ Sélectionnez le type (🛍️ Boutique / 📦 Import / 🎮 GTA Online)\n3️⃣ Entrez le montant\n4️⃣ Envoyez 1 capture (facture + ID client)\n\n🎯 **Quota :** Chaque custom = +1 au quota (objectif 40, minimum 20 pour être payé)',
+                            value: '**Utilisation :**\n1️⃣ Tapez `/custom`\n2️⃣ Sélectionnez le type (🛍️ Boutique / 📦 Import / 🎮 GTA Online)\n3️⃣ Entrez le montant\n4️⃣ Envoyez 1 capture (facture + ID client)\n\n🎯 **Quota :** Chaque custom = +1 au quota (objectif 20 customs pour être payé)',
                             inline: false
                         },
                         {
@@ -994,7 +994,7 @@ client.on('interactionCreate', async interaction => {
                         },
                         {
                             name: '🎯 Système de Quota',
-                            value: '• **Objectif** : 40 customs par employé\n• **Minimum** : 20 customs pour être payé\n• **Indicateur** : 🔴 (quota non atteint) → 🟢 (quota atteint)\n• Channel automatiquement mis à jour',
+                            value: '• **Objectif** : 20 customs par employé\n• **Minimum** : 20 customs pour être payé\n• **Indicateur** : 🔴 (quota non atteint) → 🟢 (quota atteint)\n• Channel automatiquement mis à jour',
                             inline: false
                         },
                         {
@@ -1067,7 +1067,7 @@ client.on('interactionCreate', async interaction => {
                     .addFields(
                         {
                             name: 'Quota de customisations',
-                            value: '• **Objectif :** 40 customs par période\n• **Minimum requis :** 20 customs pour être payé\n• ⚠️ **Moins de 20 customs = Aucune rémunération**',
+                            value: '• **Objectif :** 20 customs par période\n• **Minimum requis :** 20 customs pour être payé\n• ⚠️ **Moins de 20 customs = Aucune rémunération**',
                             inline: false
                         },
                         {
@@ -1169,7 +1169,7 @@ client.on('interactionCreate', async interaction => {
 
                 saveCustoms(jaydenData);
 
-                await interaction.editReply({ content: '✅ Données de Jayden Jonson initialisées :\n• 20 customisations\n• Total: 6 500 000$\n• Quota: 20/40\n• Kits vendus: 11' });
+                await interaction.editReply({ content: '✅ Données de Jayden Jonson initialisées :\n• 20 customisations\n• Total: 6 500 000$\n• Quota: 20/20 🟢\n• Kits vendus: 11' });
                 console.log('✅ Commande /setdata exécutée');
             } catch (error) {
                 console.error('❌ Erreur /setdata:', error);
@@ -1208,7 +1208,7 @@ client.on('interactionCreate', async interaction => {
                     .addFields(
                         {
                             name: '🛍️ /custom',
-                            value: 'Déclare une customisation (véhicule boutique, import ou GTA Online).\n\n**Utilisation:** Tapez `/custom` et suivez les étapes :\n1️⃣ Choisissez le type de customisation\n2️⃣ Entrez le montant de la facture\n3️⃣ Joignez la capture d\'écran de la facture\n\n**Important:** Chaque customisation compte pour votre quota mensuel (40 customs minimum).\n\n**💰 Rémunération:**\n• AMT (Apprenti Mécanicien Tunning): 15% du montant\n• M (Mécanicien): 20% du montant\n• ME (Mécanicien Expert): 25% du montant',
+                            value: 'Déclare une customisation (véhicule boutique, import ou GTA Online).\n\n**Utilisation:** Tapez `/custom` et suivez les étapes :\n1️⃣ Choisissez le type de customisation\n2️⃣ Entrez le montant de la facture\n3️⃣ Joignez la capture d\'écran de la facture\n\n**Important:** Chaque customisation compte pour votre quota mensuel (20 customs pour être payé).\n\n**💰 Rémunération:**\n• AMT (Apprenti Mécano Test): 15% du montant\n• M (Mécanicien): 20% du montant\n• ME (Mécanicien Expert): 25% du montant',
                             inline: false
                         },
                         {
@@ -1302,10 +1302,10 @@ client.on('interactionCreate', async interaction => {
                             let warning = '';
                             
                             if (quota < 20) {
-                                statusQuota = `❌ Quota: ${quota}/40 (minimum 20 requis)`;
+                                statusQuota = `❌ Quota: ${quota}/20 (minimum 20 requis)`;
                                 warning = '\n⚠️ **NE PAS PAYER** (quota < 20)';
                             } else {
-                                statusQuota = quota >= 40 ? `✅ Quota: ${quota}/40` : `🟡 Quota: ${quota}/40`;
+                                statusQuota = quota >= 20 ? `✅ Quota: ${quota}/20` : `🟡 Quota: ${quota}/20`;
                             }
 
                             embed.addFields({
@@ -1352,11 +1352,12 @@ client.on('interactionCreate', async interaction => {
                         
                         if (quota < 20) {
                             // Quota non atteint
-                            statusQuota = `❌ Quota: ${quota}/40 (minimum 20 requis)`;
+                            statusQuota = `❌ Quota: ${quota}/20 (minimum 20 requis)`;
                             warning = '\n⚠️ **NE PAS PAYER** (quota < 20)';
+                            payeTotal = 0;
                         } else {
                             // Quota atteint
-                            statusQuota = quota >= 40 ? `✅ Quota: ${quota}/40` : `🟡 Quota: ${quota}/40`;
+                            statusQuota = quota >= 20 ? `✅ Quota: ${quota}/20` : `🟡 Quota: ${quota}/20`;
                             warning = '';
                         }
 
@@ -1872,8 +1873,8 @@ client.on('messageCreate', async message => {
                 
                 saveCustoms(customs);
 
-                // Mettre à jour le channel si quota >= 40
-                if (currentQuota >= 40) {
+                // Mettre à jour le channel si quota >= 20
+                if (currentQuota >= 20) {
                     try {
                         const channel = message.channel;
                         if (channel.name.startsWith('🔴')) {
@@ -1889,7 +1890,7 @@ client.on('messageCreate', async message => {
                 const fmt = new Intl.NumberFormat('fr-FR');
                 const embed = new EmbedBuilder()
                     .setTitle('🛠️ Customisation enregistrée')
-                    .setDescription(`**Type:** ${typeLabels[custom.type]}\n**Montant:** ${fmt.format(custom.montant)} $\n**Employé:** ${message.member.displayName}\n\n🎯 **Quota:** ${currentQuota}/40 customs ${currentQuota >= 40 ? '🟢 Atteint !' : currentQuota < 20 ? '🔴 Attention: minimum 20 requis pour être payé' : '🟡 En cours'}`)
+                    .setDescription(`**Type:** ${typeLabels[custom.type]}\n**Montant:** ${fmt.format(custom.montant)} $\n**Employé:** ${message.member.displayName}\n\n🎯 **Quota:** ${currentQuota}/20 customs ${currentQuota >= 20 ? '🟢 Atteint !' : '🔴 En cours - minimum 20 requis pour être payé'}`)
                     .setColor('#2ECC71')
                     .setTimestamp()
                     .setImage('attachment://preuve.png');
