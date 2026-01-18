@@ -1612,7 +1612,7 @@ client.on('interactionCreate', async interaction => {
                 // Permission admin uniquement
                 const isAdmin = interaction.memberPermissions && interaction.memberPermissions.has(PermissionFlagsBits.Administrator);
                 if (!isAdmin) {
-                    return interaction.reply({ content: ' Seuls les administrateurs peuvent utiliser cette commande.', ephemeral: true });
+                    return interaction.reply({ content: '❌ Seuls les administrateurs peuvent utiliser cette commande.', ephemeral: true });
                 }
 
                 await interaction.deferReply();
@@ -1624,38 +1624,36 @@ client.on('interactionCreate', async interaction => {
                 const customs = loadCustoms();
                 const fmt = new Intl.NumberFormat('fr-FR');
 
-                // Initialiser quotas si nécessaire
+                // Initialiser les tableaux si nécessaire
+                if (!customs.customs) customs.customs = [];
                 if (!customs.quotas) customs.quotas = {};
                 const currentQuota = customs.quotas[targetUser.id] || 0;
 
                 // Calculer le montant par custom
                 const montantParCustom = Math.floor(montantTotal / customsToAdd);
 
-                // Ajouter des customs fictifs
+                // Ajouter des customs
                 for (let i = 0; i < customsToAdd; i++) {
                     const newCustom = {
                         id: Date.now() + i,
                         userId: targetUser.id,
                         userTag: targetMember.displayName,
                         type: 'boutique',
-                        typeLabel: ' Boutique',
+                        typeLabel: '🛍️ Boutique',
                         montant: montantParCustom,
                         imageUrl: 'https://via.placeholder.com/400',
                         timestamp: Date.now() + i
                     };
-
-
-
+                    customs.customs.push(newCustom);
                 }
 
-                // Mettre à jour le quota
                 // Mettre à jour le quota
                 customs.quotas[targetUser.id] = (currentQuota || 0) + customsToAdd;
 
                 saveCustoms(customs);
 
                 const embed = new EmbedBuilder()
-                    .setTitle(' Customs ajoutés')
+                    .setTitle('✅ Customs ajoutés')
                     .setDescription(`${targetUser} a reçu ${customsToAdd} customs pour un montant total de ${fmt.format(montantTotal)} $.`)
                     .addFields(
                         { name: 'Customs ajoutés', value: `${customsToAdd}`, inline: true },
@@ -1666,11 +1664,13 @@ client.on('interactionCreate', async interaction => {
                     .setTimestamp();
 
                 await interaction.editReply({ embeds: [embed] });
-                console.log(` Customs ajoutés pour ${targetUser.tag}: +${customsToAdd} customs (${fmt.format(montantTotal)} $)`);
-                console.log(` Customs ajoutés pour ${targetUser.tag}: +${customsToAdd} customs (${fmt.format(montantTotal)} $)`);
+                console.log(`✅ Customs ajoutés pour ${targetUser.tag}: +${customsToAdd} customs (${fmt.format(montantTotal)} $)`);
             } catch (error) {
-                console.error(' Erreur /update:', error);
+                console.error('❌ Erreur /update:', error);
                 if (interaction.deferred) {
+                    await interaction.editReply({ content: '❌ Une erreur est survenue lors de l\'ajout des customs.' });
+                } else if (!interaction.replied) {
+                    await interaction.reply({ content: '❌ Une erreur est survenue.', ephemeral: true });
                 }
             }
         }
