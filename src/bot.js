@@ -246,10 +246,21 @@ async function registerCommands() {
             {
                 name: 'clearaide',
                 description: 'Supprimer les anciens messages d\'aide du bot dans les channels employés'
-            }
-        ]);
+                description: 'Supprimer les anciens messages d''aide du bot dans les channels employés'
+            },
+            {
+                name: 'update',
+                description: 'Compléter le quota de customs d''un employé à 20',
+                options: [
+                    {
+                        name: 'employe',
+                        description: 'L''employé dont il faut compléter le quota',
+                        type: 6, // User
+                        required: true
+                    }
+                ]
         console.log('✅ Commandes /rc, /kit, /total-kit, /add, /up, /virer, /custom, /facture, /reset, /payes, /remuneration, /info, /reglement, /setdata, /aideemployer et /clearaide enregistrées');
-    } catch (error) {
+        console.log(' Commandes /rc, /kit, /total-kit, /add, /up, /virer, /custom, /facture, /reset, /payes, /remuneration, /info, /reglement, /setdata, /aideemployer, /clearaide et /update enregistrées');
         console.error('❌ Erreur lors de l\'enregistrement des commandes:', error);
     }
 }
@@ -612,26 +623,33 @@ client.on('interactionCreate', async interaction => {
                     console.warn(`⚠️ Impossible de renommer ${targetUser.tag}: ${nickError.message}`);
                 }
 
-                // Trouver le channel de l'employé (commence par 🔴 et contient le nom)
+                // Trouver le channel de l'employé (prénom-nom)
                 const baseUsername = targetMember.displayName.toLowerCase().replace(/\[\w+\]\s*/, '').replace(/\s+/g, '-');
-                const channels = interaction.guild.channels.cache.filter(c => 
-                    c.type === ChannelType.GuildText && 
-                    c.name.includes(baseUsername)
+                const employeeChannel = interaction.guild.channels.cache.find(c =>
+                    c.type === ChannelType.GuildText &&
+                    c.name === baseUsername
                 );
 
-                let employeeChannel = null;
-                for (const [id, channel] of channels) {
-                    if (channel.name.startsWith('🔴')) {
-                        employeeChannel = channel;
-                        break;
-                    }
-                }
-
                 if (employeeChannel) {
-                    // Déplacer le channel en haut (position 0 dans la catégorie)
-                    await employeeChannel.setPosition(0);
-                }
+                    // IDs des catégories pour l'alternance
+                    const CATEGORY_1 = '1424376889476382910';
+                    const CATEGORY_2 = '1424377064248840285';
 
+                    // Déterminer dans quelle catégorie se trouve actuellement le channel
+                    const currentCategory = employeeChannel.parentId;
+                    
+                    // Alterner entre les deux catégories
+                    let newCategory;
+                    if (currentCategory === CATEGORY_1) {
+                        newCategory = CATEGORY_2;
+                    } else {
+                        // Si pas dans CATEGORY_1, déplacer vers CATEGORY_1 (première utilisation)
+                        newCategory = CATEGORY_1;
+                    }
+
+                    // Déplacer le channel vers la nouvelle catégorie
+                    await employeeChannel.setParent(newCategory);
+                }
                 const embed = new EmbedBuilder()
                     .setTitle('⬆️ Promotion')
                     .setDescription(`${targetUser} a été promu au grade ${gradeText} !`)
@@ -1578,6 +1596,75 @@ client.on('interactionCreate', async interaction => {
                 }
             }
         }
+        // Slash command /update
+        if (interaction.commandName === 'update') {
+            try {
+                // Permission admin uniquement
+                const isAdmin = interaction.memberPermissions && interaction.memberPermissions.has(PermissionFlagsBits.Administrator);
+                if (!isAdmin) {
+                    return interaction.reply({ content: ' Seuls les administrateurs peuvent utiliser cette commande.', ephemeral: true });
+                }
+
+                await interaction.deferReply();
+
+                const targetUser = interaction.options.getUser('employe');
+                const targetMember = await interaction.guild.members.fetch(targetUser.id);
+                const customs = loadCustoms();
+                const fmt = new Intl.NumberFormat('fr-FR');
+
+                // Initialiser quotas si nécessaire
+                if (!customs.quotas) customs.quotas = {};
+                const currentQuota = customs.quotas[targetUser.id] || 0;
+
+                if (currentQuota >= 20) {
+                    return interaction.editReply({ content: ` ${targetMember.displayName} a déjà atteint ou dépassé le quota (${currentQuota}/20).` });
+                }
+
+                // Calculer combien de customs ajouter
+                const customsToAdd = 20 - currentQuota;
+
+                // Ajouter des customs fictifs
+                for (let i = 0; i < customsToAdd; i++) {
+                    const newCustom = {
+                        id: Date.now() + i,
+                        userId: targetUser.id,
+                        userTag: targetMember.displayName,
+                        type: 'boutique',
+                        typeLabel: ' Boutique',
+                        montant: 500000,
+                        imageUrl: 'https://via.placeholder.com/400',
+                        timestamp: Date.now() + i
+                    };
+                    customs.customs.push(newCustom);
+                }
+
+                // Mettre à jour le quota
+                customs.quotas[targetUser.id] = 20;
+
+                saveCustoms(customs);
+
+                const embed = new EmbedBuilder()
+                    .setTitle(' Quota complété')
+                    .setDescription(`Le quota de **${targetMember.displayName}** a été complété à 20 customs.`)
+                    .addFields(
+                        { name: 'Customs ajoutés', value: `${customsToAdd}`, inline: true },
+                        { name: 'Quota final', value: '20/20 ', inline: true },
+                        { name: 'Montant total ajouté', value: `${fmt.format(customsToAdd * 500000)} $`, inline: true }
+                    )
+                    .setColor('#2ECC71')
+                    .setTimestamp();
+
+                await interaction.editReply({ embeds: [embed] });
+                console.log(` Quota complété pour ${targetUser.tag}: +${customsToAdd} customs`);
+            } catch (error) {
+                console.error(' Erreur /update:', error);
+                if (interaction.deferred) {
+                    await interaction.editReply({ content: ' Une erreur est survenue.' });
+                } else if (!interaction.replied) {
+                    await interaction.reply({ content: ' Une erreur est survenue.', ephemeral: true });
+                }
+            }
+        }
         return; // ne pas traiter comme bouton
     }
 
@@ -2237,3 +2324,4 @@ if (!TOKEN) {
     process.exit(1);
 }
 client.login(TOKEN);
+
