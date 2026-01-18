@@ -246,7 +246,6 @@ async function registerCommands() {
             {
                 name: 'clearaide',
                 description: 'Supprimer les anciens messages d\'aide du bot dans les channels employés'
-                description: 'Supprimer les anciens messages d''aide du bot dans les channels employés'
             },
             {
                 name: 'update',
