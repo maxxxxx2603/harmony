@@ -185,7 +185,7 @@ async function registerCommands() {
             },
             {
                 name: 'up',
-                description: 'Monter un employé de grade (ER → E → EE)',
+                description: 'Monter un employé de grade (AMT → M → ME)',
                 options: [
                     {
                         name: 'employe',
@@ -478,8 +478,8 @@ client.on('interactionCreate', async interaction => {
                 if (role2) await targetMember.roles.add(role2);
                 if (roleToRemove) await targetMember.roles.remove(roleToRemove);
 
-                // Renommer l'employé avec le préfixe [ER]
-                let newNickname = `[ER] ${targetMember.displayName}`;
+                // Renommer l'employé avec le préfixe [AMT]
+                let newNickname = `[AMT] ${targetMember.displayName}`;
                 try {
                     await targetMember.setNickname(newNickname);
                 } catch (nickError) {
@@ -489,7 +489,7 @@ client.on('interactionCreate', async interaction => {
 
                 // Créer un channel avec le nom de l'employé dans la catégorie spécifiée
                 const baseName = targetMember.displayName.toLowerCase().replace(/\[\w+\]\s*/, '').replace(/\s+/g, '-');
-                const channelName = `🔴-er-${baseName}`;
+                const channelName = `🔴-amt-${baseName}`;
                 const employeeChannel = await interaction.guild.channels.create({
                     name: channelName,
                     type: ChannelType.GuildText,
@@ -571,37 +571,37 @@ client.on('interactionCreate', async interaction => {
                 let newNickname, newChannelName, gradeText;
 
                 if (hasRoleE) {
-                    // Promotion E → EE
+                    // Promotion M → ME
                     const roleToRemove = await interaction.guild.roles.fetch('1351702387198394429');
                     const roleToAdd = await interaction.guild.roles.fetch('1288186576513269843');
                     
                     if (roleToRemove) await targetMember.roles.remove(roleToRemove);
                     if (roleToAdd) await targetMember.roles.add(roleToAdd);
 
-                    // Renommer de [E] à [EE]
-                    newNickname = targetMember.displayName.replace('[E]', '[EE]');
-                    if (!targetMember.displayName.includes('[E]')) {
-                        newNickname = `[EE] ${targetMember.displayName.replace(/^\[\w+\]\s*/, '')}`;
+                    // Renommer de [M] à [ME]
+                    newNickname = targetMember.displayName.replace('[M]', '[ME]');
+                    if (!targetMember.displayName.includes('[M]')) {
+                        newNickname = `[ME] ${targetMember.displayName.replace(/^\[\w+\]\s*/, '')}`;
                     }
                     
-                    gradeText = 'EE';
-                    newChannelName = '-ee-';
+                    gradeText = 'ME';
+                    newChannelName = '-me-';
                 } else {
-                    // Promotion ER → E
+                    // Promotion AMT → M
                     const roleToRemove = await interaction.guild.roles.fetch('1288186552249225380');
                     const roleToAdd = await interaction.guild.roles.fetch('1351702387198394429');
                     
                     if (roleToRemove) await targetMember.roles.remove(roleToRemove);
                     if (roleToAdd) await targetMember.roles.add(roleToAdd);
 
-                    // Renommer de [ER] à [E]
-                    newNickname = targetMember.displayName.replace('[ER]', '[E]');
-                    if (!targetMember.displayName.includes('[ER]')) {
-                        newNickname = `[E] ${targetMember.displayName.replace(/^\[\w+\]\s*/, '')}`;
+                    // Renommer de [AMT] à [M]
+                    newNickname = targetMember.displayName.replace('[AMT]', '[M]');
+                    if (!targetMember.displayName.includes('[AMT]')) {
+                        newNickname = `[M] ${targetMember.displayName.replace(/^\[\w+\]\s*/, '')}`;
                     }
                     
-                    gradeText = 'E';
-                    newChannelName = '-e-';
+                    gradeText = 'M';
+                    newChannelName = '-m-';
                 }
                 
                 try {
@@ -629,11 +629,11 @@ client.on('interactionCreate', async interaction => {
                     // Renommer le channel selon la promotion
                     let updatedChannelName;
                     if (hasRoleE) {
-                        // E → EE
-                        updatedChannelName = employeeChannel.name.replace('-e-', '-ee-').replace('🔴-e-', '🔴-ee-');
+                        // M → ME
+                        updatedChannelName = employeeChannel.name.replace('-m-', '-me-').replace('🔴-m-', '🔴-me-');
                     } else {
-                        // ER → E
-                        updatedChannelName = employeeChannel.name.replace('-er-', '-e-').replace('🔴-er-', '🔴-e-');
+                        // AMT → M
+                        updatedChannelName = employeeChannel.name.replace('-amt-', '-m-').replace('🔴-amt-', '🔴-m-');
                     }
                     await employeeChannel.setName(updatedChannelName);
                     
@@ -719,10 +719,10 @@ client.on('interactionCreate', async interaction => {
                     await targetMember.roles.add(keepRole);
                 }
 
-                // Retirer le préfixe [ER], [E], [EE] du pseudo
+                // Retirer le préfixe [AMT], [M], [ME] du pseudo
                 try {
                     const currentNickname = targetMember.displayName;
-                    const newNickname = currentNickname.replace(/^\[(ER|E|EE)\]\s*/, '');
+                    const newNickname = currentNickname.replace(/^\[(AMT|M|ME)\]\s*/, '');
                     if (newNickname !== currentNickname) {
                         await targetMember.setNickname(newNickname);
                     }
@@ -848,7 +848,7 @@ client.on('interactionCreate', async interaction => {
                         },
                         {
                             name: '💵 Pourcentages par Grade',
-                            value: '• **[ER]** Employé Recrue : **15%** des factures\n• **[E]** Employé : **20%** des factures\n• **[EE]** Employé Expert : **25%** des factures',
+                            value: '• **[AMT]** Apprenti Mécanicien Tunning : **15%** des factures\n• **[M]** Mécanicien : **20%** des factures\n• **[ME]** Mécanicien Expert : **25%** des factures',
                             inline: false
                         },
                         {
@@ -949,12 +949,12 @@ client.on('interactionCreate', async interaction => {
                         },
                         {
                             name: '➕ /add - Ajouter un employé',
-                            value: 'Ajoute un employé : attribution des rôles, création du channel privé, renommage en [ER].',
+                            value: 'Ajoute un employé : attribution des rôles, création du channel privé, renommage en [AMT].',
                             inline: true
                         },
                         {
                             name: '⬆️ /up - Promotion',
-                            value: 'Promeut un employé automatiquement : ER → E → EE (rôles + channel).',
+                            value: 'Promeut un employé automatiquement : AMT → M → ME (rôles + channel).',
                             inline: true
                         },
                         {
@@ -974,7 +974,7 @@ client.on('interactionCreate', async interaction => {
                         },
                         {
                             name: '💰 /payes - Calcul des payes',
-                            value: 'Affiche les payes de tous les employés :\n• **[ER]** : 15% factures + primes\n• **[E]** : 20% factures + primes\n• **[EE]** : 25% factures + primes\n\n⚠️ Quota < 20 = 0$ de paye',
+                            value: 'Affiche les payes de tous les employés :\n• **[AMT]** : 15% factures + primes\n• **[M]** : 20% factures + primes\n• **[ME]** : 25% factures + primes\n\n⚠️ Quota < 20 = 0$ de paye',
                             inline: true
                         },
                         {
@@ -1012,7 +1012,7 @@ client.on('interactionCreate', async interaction => {
                         },
                         {
                             name: '💸 Système de Payes',
-                            value: '• **[ER]** : 15% des factures\n• **[E]** : 20% des factures\n• **[EE]** : 25% des factures\n• **Prime kits** : 20 kits = +100 000$\n• Si quota < 20 : Aucune paye',
+                            value: '• **[AMT]** : 15% des factures\n• **[M]** : 20% des factures\n• **[ME]** : 25% des factures\n• **Prime kits** : 20 kits = +100 000$\n• Si quota < 20 : Aucune paye',
                             inline: false
                         }
                     )
@@ -1147,26 +1147,26 @@ client.on('interactionCreate', async interaction => {
                 // Données de Jayden Jonson
                 const jaydenData = {
                     customs: [
-                        { id: 1736508044001, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044001 },
-                        { id: 1736508044002, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044002 },
-                        { id: 1736508044003, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "import", typeLabel: "📦 Import", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044003 },
-                        { id: 1736508044004, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044004 },
-                        { id: 1736508044005, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044005 },
-                        { id: 1736508044006, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "import", typeLabel: "📦 Import", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044006 },
-                        { id: 1736508044007, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044007 },
-                        { id: 1736508044008, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044008 },
-                        { id: 1736508044009, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044009 },
-                        { id: 1736508044010, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "gta_online", typeLabel: "🎮 GTA Online", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044010 },
-                        { id: 1736508044011, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044011 },
-                        { id: 1736508044012, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044012 },
-                        { id: 1736508044013, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044013 },
-                        { id: 1736508044014, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044014 },
-                        { id: 1736508044015, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044015 },
-                        { id: 1736508044016, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "import", typeLabel: "📦 Import", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044016 },
-                        { id: 1736508044017, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044017 },
-                        { id: 1736508044018, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044018 },
-                        { id: 1736508044019, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044019 },
-                        { id: 1736508044020, userId: "396794712750555138", userTag: "[ER] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044020 }
+                        { id: 1736508044001, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044001 },
+                        { id: 1736508044002, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044002 },
+                        { id: 1736508044003, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "import", typeLabel: "📦 Import", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044003 },
+                        { id: 1736508044004, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044004 },
+                        { id: 1736508044005, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044005 },
+                        { id: 1736508044006, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "import", typeLabel: "📦 Import", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044006 },
+                        { id: 1736508044007, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044007 },
+                        { id: 1736508044008, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044008 },
+                        { id: 1736508044009, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044009 },
+                        { id: 1736508044010, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "gta_online", typeLabel: "🎮 GTA Online", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044010 },
+                        { id: 1736508044011, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044011 },
+                        { id: 1736508044012, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044012 },
+                        { id: 1736508044013, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044013 },
+                        { id: 1736508044014, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044014 },
+                        { id: 1736508044015, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044015 },
+                        { id: 1736508044016, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "import", typeLabel: "📦 Import", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044016 },
+                        { id: 1736508044017, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044017 },
+                        { id: 1736508044018, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044018 },
+                        { id: 1736508044019, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044019 },
+                        { id: 1736508044020, userId: "396794712750555138", userTag: "[AMT] jayden jonson", type: "boutique", typeLabel: "🛍️ Boutique", montant: 325000, imageUrl: "https://via.placeholder.com/400", timestamp: 1736508044020 }
                     ],
                     quotas: {
                         "396794712750555138": 20
@@ -1221,7 +1221,7 @@ client.on('interactionCreate', async interaction => {
                     .addFields(
                         {
                             name: '🛍️ /custom',
-                            value: 'Déclare une customisation (véhicule boutique, import ou GTA Online).\n\n**Utilisation:** Tapez `/custom` et suivez les étapes :\n1️⃣ Choisissez le type de customisation\n2️⃣ Entrez le montant de la facture\n3️⃣ Joignez la capture d\'écran de la facture\n\n**Important:** Chaque customisation compte pour votre quota mensuel (40 customs minimum).\n\n**💰 Rémunération:**\n• ER (Employé Recrue): 15% du montant\n• E (Employé): 20% du montant\n• EE (Employé Expert): 25% du montant',
+                            value: 'Déclare une customisation (véhicule boutique, import ou GTA Online).\n\n**Utilisation:** Tapez `/custom` et suivez les étapes :\n1️⃣ Choisissez le type de customisation\n2️⃣ Entrez le montant de la facture\n3️⃣ Joignez la capture d\'écran de la facture\n\n**Important:** Chaque customisation compte pour votre quota mensuel (40 customs minimum).\n\n**💰 Rémunération:**\n• AMT (Apprenti Mécanicien Tunning): 15% du montant\n• M (Mécanicien): 20% du montant\n• ME (Mécanicien Expert): 25% du montant',
                             inline: false
                         },
                         {
@@ -1280,9 +1280,9 @@ client.on('interactionCreate', async interaction => {
                 const fmt = new Intl.NumberFormat('fr-FR');
 
                 // Rôles et pourcentages
-                const ROLE_ER = '1288186552249225380'; // 15%
-                const ROLE_E = '1351702387198394429';  // 20%
-                const ROLE_EE = '1288186576513269843'; // 25%
+                const ROLE_AMT = '1288186552249225380'; // 15%
+                const ROLE_M = '1351702387198394429';  // 20%
+                const ROLE_ME = '1288186576513269843'; // 25%
 
                 // Calculer les payes pour chaque employé
                 const embed = new EmbedBuilder()
@@ -1336,15 +1336,15 @@ client.on('interactionCreate', async interaction => {
                         let grade = 'Inconnu';
 
                         // Déterminer le pourcentage selon le rôle
-                        if (member.roles.cache.has(ROLE_EE)) {
+                        if (member.roles.cache.has(ROLE_ME)) {
                             percentage = 25;
-                            grade = '[EE]';
-                        } else if (member.roles.cache.has(ROLE_E)) {
+                            grade = '[ME]';
+                        } else if (member.roles.cache.has(ROLE_M)) {
                             percentage = 20;
-                            grade = '[E]';
-                        } else if (member.roles.cache.has(ROLE_ER)) {
+                            grade = '[M]';
+                        } else if (member.roles.cache.has(ROLE_AMT)) {
                             percentage = 15;
-                            grade = '[ER]';
+                            grade = '[AMT]';
                         } else {
                             // Pas un employé, on skip
                             console.log(`⚠️ ${member.displayName} n'a pas de rôle employé`);
