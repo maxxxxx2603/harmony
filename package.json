@@ -1,0 +1,13 @@
+{
+  "name": "harmony-bot",
+  "version": "1.0.0",
+  "description": "Bot Discord de gestion d'entreprise",
+  "main": "src/bot.js",
+  "scripts": {
+    "start": "node src/bot.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^17.2.3"
+  }
+}
