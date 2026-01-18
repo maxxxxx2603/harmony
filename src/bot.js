@@ -250,12 +250,24 @@ async function registerCommands() {
             },
             {
                 name: 'update',
-                description: 'Compléter le quota de customs d''un employé à 20',
+                description: 'Ajouter des customs à un employé',
                 options: [
                     {
                         name: 'employe',
-                        description: 'L''employé dont il faut compléter le quota',
+                        description: 'L''employé à qui ajouter des customs',
                         type: 6, // User
+                        required: true
+                    },
+                    {
+                        name: 'nombre',
+                        description: 'Nombre de customs à ajouter',
+                        type: 4, // Integer
+                        required: true
+                    },
+                    {
+                        name: 'montant_total',
+                        description: 'Montant total facturé',
+                        type: 4, // Integer
                         required: true
                     }
                 ]
@@ -1609,6 +1621,8 @@ client.on('interactionCreate', async interaction => {
 
                 const targetUser = interaction.options.getUser('employe');
                 const targetMember = await interaction.guild.members.fetch(targetUser.id);
+                const customsToAdd = interaction.options.getInteger('nombre');
+                const montantTotal = interaction.options.getInteger('montant_total');
                 const customs = loadCustoms();
                 const fmt = new Intl.NumberFormat('fr-FR');
 
@@ -1616,12 +1630,8 @@ client.on('interactionCreate', async interaction => {
                 if (!customs.quotas) customs.quotas = {};
                 const currentQuota = customs.quotas[targetUser.id] || 0;
 
-                if (currentQuota >= 20) {
-                    return interaction.editReply({ content: ` ${targetMember.displayName} a déjà atteint ou dépassé le quota (${currentQuota}/20).` });
-                }
-
-                // Calculer combien de customs ajouter
-                const customsToAdd = 20 - currentQuota;
+                // Calculer le montant par custom
+                const montantParCustom = Math.floor(montantTotal / customsToAdd);
 
                 // Ajouter des customs fictifs
                 for (let i = 0; i < customsToAdd; i++) {
@@ -1631,32 +1641,34 @@ client.on('interactionCreate', async interaction => {
                         userTag: targetMember.displayName,
                         type: 'boutique',
                         typeLabel: ' Boutique',
-                        montant: 500000,
+                        montant: montantParCustom,
                         imageUrl: 'https://via.placeholder.com/400',
                         timestamp: Date.now() + i
                     };
-                    customs.customs.push(newCustom);
+
+
+
                 }
 
                 // Mettre à jour le quota
-                customs.quotas[targetUser.id] = 20;
+                // Mettre à jour le quota
+                customs.quotas[targetUser.id] = (currentQuota || 0) + customsToAdd;
 
                 saveCustoms(customs);
 
                 const embed = new EmbedBuilder()
-                    .setTitle(' Quota complété')
-                    .setDescription(`Le quota de **${targetMember.displayName}** a été complété à 20 customs.`)
+                    .setTitle(' Customs ajoutés')
+                    .setDescription(`${targetUser} a reçu ${customsToAdd} customs pour un montant total de ${fmt.format(montantTotal)} $.`)
                     .addFields(
                         { name: 'Customs ajoutés', value: `${customsToAdd}`, inline: true },
-                        { name: 'Quota final', value: '20/20 ', inline: true },
-                        { name: 'Montant total ajouté', value: `${fmt.format(customsToAdd * 500000)} $`, inline: true }
+                        { name: 'Quota actuel', value: `${customs.quotas[targetUser.id]}/20 ${customs.quotas[targetUser.id] >= 20 ? '' : ''}', inline: true },
+                        { name: 'Montant total', value: `${fmt.format(montantTotal)} $`, inline: true }
                     )
                     .setColor('#2ECC71')
                     .setTimestamp();
 
                 await interaction.editReply({ embeds: [embed] });
-                console.log(` Quota complété pour ${targetUser.tag}: +${customsToAdd} customs`);
-            } catch (error) {
+                console.log(` Customs ajoutés pour ${targetUser.tag}: +${customsToAdd} customs (${fmt.format(montantTotal)} $)`);
                 console.error(' Erreur /update:', error);
                 if (interaction.deferred) {
                     await interaction.editReply({ content: ' Une erreur est survenue.' });
