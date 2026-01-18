@@ -270,11 +270,10 @@ async function registerCommands() {
                         required: true
                     }
                 ]
-        console.log('✅ Commandes /rc, /kit, /total-kit, /add, /up, /virer, /custom, /facture, /reset, /payes, /remuneration, /info, /reglement, /setdata, /aideemployer et /clearaide enregistrées');
+            }
+        ]);
         console.log(' Commandes /rc, /kit, /total-kit, /add, /up, /virer, /custom, /facture, /reset, /payes, /remuneration, /info, /reglement, /setdata, /aideemployer, /clearaide et /update enregistrées');
-        console.error('❌ Erreur lors de l\'enregistrement des commandes:', error);
-    }
-}
+    } catch (error) {
 
 // Helpers persistance paie
 function ensureDataDir() {
@@ -1660,7 +1659,7 @@ client.on('interactionCreate', async interaction => {
                     .setDescription(`${targetUser} a reçu ${customsToAdd} customs pour un montant total de ${fmt.format(montantTotal)} $.`)
                     .addFields(
                         { name: 'Customs ajoutés', value: `${customsToAdd}`, inline: true },
-                        { name: 'Quota actuel', value: `${customs.quotas[targetUser.id]}/20 ${customs.quotas[targetUser.id] >= 20 ? '' : ''}', inline: true },
+                        { name: 'Quota actuel', value: `${customs.quotas[targetUser.id]}/20 ${customs.quotas[targetUser.id] >= 20 ? '' : ''}`, inline: true },
                         { name: 'Montant total', value: `${fmt.format(montantTotal)} $`, inline: true }
                     )
                     .setColor('#2ECC71')
@@ -1668,11 +1667,10 @@ client.on('interactionCreate', async interaction => {
 
                 await interaction.editReply({ embeds: [embed] });
                 console.log(` Customs ajoutés pour ${targetUser.tag}: +${customsToAdd} customs (${fmt.format(montantTotal)} $)`);
+                console.log(` Customs ajoutés pour ${targetUser.tag}: +${customsToAdd} customs (${fmt.format(montantTotal)} $)`);
+            } catch (error) {
                 console.error(' Erreur /update:', error);
                 if (interaction.deferred) {
-                    await interaction.editReply({ content: ' Une erreur est survenue.' });
-                } else if (!interaction.replied) {
-                    await interaction.reply({ content: ' Une erreur est survenue.', ephemeral: true });
                 }
             }
         }
@@ -2336,3 +2334,5 @@ if (!TOKEN) {
 }
 client.login(TOKEN);
 
+}
+}
