@@ -238,9 +238,13 @@ async function registerCommands() {
             {
                 name: 'setdata',
                 description: 'Initialiser les données de Jayden Jonson (admin only)'
+            },
+            {
+                name: 'aideemployer',
+                description: 'Envoyer un message d\'aide sur les commandes /custom et /kit dans tous les channels employés'
             }
         ]);
-        console.log('✅ Commandes /rc, /kit, /total-kit, /add, /up, /virer, /custom, /facture, /reset, /payes, /remuneration, /info, /reglement et /setdata enregistrées');
+        console.log('✅ Commandes /rc, /kit, /total-kit, /add, /up, /virer, /custom, /facture, /reset, /payes, /remuneration, /info, /reglement, /setdata et /aideemployer enregistrées');
     } catch (error) {
         console.error('❌ Erreur lors de l\'enregistrement des commandes:', error);
     }
@@ -1183,6 +1187,82 @@ client.on('interactionCreate', async interaction => {
             } catch (error) {
                 console.error('❌ Erreur /setdata:', error);
                 await interaction.editReply({ content: '❌ Une erreur est survenue.' });
+            }
+        }
+        // Slash command /aideemployer
+        if (interaction.commandName === 'aideemployer') {
+            try {
+                // Permission admin uniquement
+                const isAdmin = interaction.memberPermissions && interaction.memberPermissions.has(PermissionFlagsBits.Administrator);
+                if (!isAdmin) {
+                    return interaction.reply({ content: '❌ Seuls les administrateurs peuvent utiliser cette commande.', ephemeral: true });
+                }
+
+                await interaction.deferReply({ ephemeral: true });
+
+                // ID de la catégorie employés
+                const EMPLOYEE_CATEGORY_ID = '1424376634554716322';
+
+                // Récupérer tous les channels de la catégorie employés
+                const guild = interaction.guild;
+                const employeeChannels = guild.channels.cache.filter(
+                    channel => channel.parentId === EMPLOYEE_CATEGORY_ID && channel.type === ChannelType.GuildText
+                );
+
+                if (employeeChannels.size === 0) {
+                    return interaction.editReply({ content: '❌ Aucun channel trouvé dans la catégorie employés.' });
+                }
+
+                // Créer l'embed d'aide
+                const helpEmbed = new EmbedBuilder()
+                    .setTitle('📋 Guide des Commandes Employés')
+                    .setDescription('Voici les commandes disponibles pour déclarer vos ventes. **Seules les ventes effectuées via ces commandes seront comptabilisées pour votre paie.**')
+                    .setColor('#00FF00')
+                    .addFields(
+                        {
+                            name: '🛍️ /custom',
+                            value: 'Déclare une customisation (véhicule boutique, import ou GTA Online).\n\n**Utilisation:** Tapez `/custom` et suivez les étapes :\n1️⃣ Choisissez le type de customisation\n2️⃣ Entrez le montant de la facture\n3️⃣ Joignez la capture d\'écran de la facture\n\n**Important:** Chaque customisation compte pour votre quota mensuel (40 customs minimum).\n\n**💰 Rémunération:**\n• ER (Employé Recrue): 15% du montant\n• E (Employé): 20% du montant\n• EE (Employé Expert): 25% du montant',
+                            inline: false
+                        },
+                        {
+                            name: '📦 /kit',
+                            value: 'Déclare une vente de kits avec facture.\n\n**Utilisation:** Tapez `/kit` puis :\n1️⃣ Entrez le nombre de kits vendus\n2️⃣ Joignez la capture d\'écran de la facture\n\n**Prime:** Vous recevez une prime de **100 000$** par palier de **20 kits** vendus.\n\n**Exemple:**\n• 20 kits → +100 000$\n• 40 kits → +200 000$\n• 60 kits → +300 000$',
+                            inline: false
+                        },
+                        {
+                            name: '⚠️ Important',
+                            value: '**Seules les ventes déclarées via `/custom` et `/kit` dans votre channel employé seront comptabilisées pour votre paie.**\n\nToute vente non déclarée ne pourra pas être prise en compte lors du calcul des rémunérations.\n\nEn cas de question, contactez la direction.',
+                            inline: false
+                        }
+                    )
+                    .setFooter({ text: 'Harmony Custom • Système de rémunération' })
+                    .setTimestamp();
+
+                // Envoyer le message dans tous les channels employés
+                let sentCount = 0;
+                let failedCount = 0;
+
+                for (const [channelId, channel] of employeeChannels) {
+                    try {
+                        await channel.send({ embeds: [helpEmbed] });
+                        sentCount++;
+                    } catch (error) {
+                        console.error(`❌ Erreur lors de l'envoi dans ${channel.name}:`, error);
+                        failedCount++;
+                    }
+                }
+
+                await interaction.editReply({ 
+                    content: `✅ Message d'aide envoyé dans ${sentCount} channel(s) employé(s).${failedCount > 0 ? ` (${failedCount} échec(s))` : ''}` 
+                });
+                console.log(`✅ Commande /aideemployer exécutée: ${sentCount} messages envoyés`);
+            } catch (error) {
+                console.error('❌ Erreur /aideemployer:', error);
+                if (interaction.deferred) {
+                    await interaction.editReply({ content: '❌ Une erreur est survenue.' });
+                } else {
+                    await interaction.reply({ content: '❌ Une erreur est survenue.', ephemeral: true });
+                }
             }
         }
         // Slash command /payes
