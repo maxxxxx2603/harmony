@@ -489,7 +489,7 @@ client.on('interactionCreate', async interaction => {
 
                 // Créer un channel avec le nom de l'employé dans la catégorie spécifiée
                 const baseName = targetMember.displayName.toLowerCase().replace(/\[\w+\]\s*/, '').replace(/\s+/g, '-');
-                const channelName = `🔴-amt-${baseName}`;
+                const channelName = `🔴-${baseName}`;
                 const employeeChannel = await interaction.guild.channels.create({
                     name: channelName,
                     type: ChannelType.GuildText,
@@ -585,7 +585,6 @@ client.on('interactionCreate', async interaction => {
                     }
                     
                     gradeText = 'ME';
-                    newChannelName = '-me-';
                 } else {
                     // Promotion AMT → M
                     const roleToRemove = await interaction.guild.roles.fetch('1288186552249225380');
@@ -601,7 +600,6 @@ client.on('interactionCreate', async interaction => {
                     }
                     
                     gradeText = 'M';
-                    newChannelName = '-m-';
                 }
                 
                 try {
@@ -626,17 +624,6 @@ client.on('interactionCreate', async interaction => {
                 }
 
                 if (employeeChannel) {
-                    // Renommer le channel selon la promotion
-                    let updatedChannelName;
-                    if (hasRoleE) {
-                        // M → ME
-                        updatedChannelName = employeeChannel.name.replace('-m-', '-me-').replace('🔴-m-', '🔴-me-');
-                    } else {
-                        // AMT → M
-                        updatedChannelName = employeeChannel.name.replace('-amt-', '-m-').replace('🔴-amt-', '🔴-m-');
-                    }
-                    await employeeChannel.setName(updatedChannelName);
-                    
                     // Déplacer le channel en haut (position 0 dans la catégorie)
                     await employeeChannel.setPosition(0);
                 }
